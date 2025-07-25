@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator JS</title>
+    <link rel="stylesheet" href="./src/css/styles.css">
+  </head>
+  <body class="bg-zinc-900 flex items-center justify-center min-h-screen flex-col">
+    <h1 class="text-white text-[3rem] font-bold mb-4">Calculator Pro</h1>
+    <main class="bg-gray-800 p-6 rounded-[20px] shadow-2xl/50 w-[400px] h-[500px] border border-zinc-700 inset-shadow-sm inset-shadow-zinc-700 ">
+      <section class="flex flex-col h-full gap-4">
+        <div id="display" class="flex overflow-y-auto py-1 px-2 bg-neutral-700 rounded-xl">
+          <p id="valor" class="text-white text-right text-[3rem] mb-4 w-full">0</p>
+        </div>
+        <div class="grid grid-cols-4 gap-2 font-bold text-2xl">
+          <button id="btn_clear" class="bg-red-500 text-white p-4 rounded-[15px] col-span-2 hover:scale-[1.05] hover:bg-red-400 transition-all ease-out duration-[0.3s] cursor-pointer ">Clear</button>
+          <button id="btn_delete" class="bg-gray-500 text-white p-4 rounded-[15px] flex items-center justify-center hover:scale-[1.05] hover:bg-gray-400 transition-all ease-out duration-[0.3s] cursor-pointer "><w-[2rem]" src="./img/delete.svg" alt="delete">
+          </button>
+          <button id="btn_dividir" class="bg-blue-500 text-gray-800 p-4 rounded-[15px] hover:scale-[1.05] hover:bg-blue-300 transition-all ease-out duration-[0.3s] cursor-pointer  ">/</button>
+          <button id="btn_seven" class="bg-gray-500 text-white p-4 rounded-[15px] hover:scale-[1.05] hover:bg-gray-400 hover:text-gray-800 transition-all ease-out duration-[0.3s] cursor-pointer ">7</button>
+          <button id="btn_eigth" class="bg-gray-500 text-white p-4 rounded-[15px] hover:scale-[1.05] hover:bg-gray-400 hover:text-gray-800 transition-all ease-out duration-[0.3s] cursor-pointer  ">8</button>
+          <button id="btn_nine" class="bg-gray-500 text-white p-4 rounded-[15px] hover:scale-[1.05] hover:bg-gray-400 hover:text-gray-800 transition-all ease-out duration-[0.3s] cursor-pointer  ">9</button>
+          <button id="btn_multiplicar" class="bg-blue-500 text-gray-800 p-4 rounded-[15px] hover:scale-[1.05] hover:bg-blue-300 transition-all ease-out duration-[0.3s] cursor-pointer ">x</button>
+          <button id="btn_four" class="bg-gray-500 text-white p-4 rounded-[15px] hover:scale-[1.05] hover:bg-gray-400 hover:text-gray-800 transition-all ease-out duration-[0.3s] cursor-pointer">4</button>
+          <button id="btn_five" class="bg-gray-500 text-white p-4 rounded-[15px] hover:scale-[1.05] hover:bg-gray-400 hover:text-gray-800 transition-all ease-out duration-[0.3s] cursor-pointer  ">5</button>
+          <button id="btn_six" class="bg-gray-500 text-white p-4 rounded-[15px] hover:scale-[1.05] hover:bg-gray-400 hover:text-gray-800 transition-all ease-out duration-[0.3s] cursor-pointer  ">6</button>
+          <button id="btn_resta" class="bg-blue-500 text-gray-800 p-4 rounded-[15px]  hover:scale-[1.05] hover:bg-blue-300 transition-all ease-out duration-[0.3s] cursor-pointer ">-</button>
+          <button id="btn_once" class="bg-gray-500 text-white p-4 rounded-[15px] hover:scale-[1.05] hover:bg-gray-400 hover:text-gray-800 transition-all ease-out duration-[0.3s] cursor-pointer  ">1</button>
+          <button id="btn_two" class="bg-gray-500 text-white p-4 rounded-[15px] hover:scale-[1.05] hover:bg-gray-400 hover:text-gray-800 transition-all ease-out duration-[0.3s] cursor-pointer  ">2</button>
+          <button id="btn_three" class="bg-gray-500 text-white p-4 rounded-[15px] hover:scale-[1.05] hover:bg-gray-400 hover:text-gray-800 transition-all ease-out duration-[0.3s] cursor-pointer  ">3</button>
+          <button id="btn_suma" class="bg-blue-500 text-gray-800 p-4 rounded-[15px] hover:scale-[1.05] hover:bg-blue-300 transition-all ease-out duration-[0.3s] cursor-pointer  ">+</button>
+          <button id="btn_cero" class="bg-gray-500 text-white p-4 rounded-[15px] col-span-2 hover:scale-[1.05] hover:bg-gray-400 hover:text-gray-800 transition-all ease-out duration-[0.3s] cursor-pointer  ">0</button>
+          <button id="btn_point" class="bg-gray-500 text-white p-4 rounded-[15px] hover:scale-[1.05] hover:bg-gray-400 hover:text-gray-800 transition-all ease-out duration-[0.3s] cursor-pointer  ">.</button>
+          <button id="btn_igual" class="bg-purple-500 text-gray-800 p-4 rounded-[15px] hover:scale-[1.05] hover:bg-purple-300 transition-all ease-out duration-[0.3s] cursor-pointer ">=</button>
+        </div>
+      </section>
+    </main>
+    <script src="./src/js/main.js"></script>
+  </body>
+</html>

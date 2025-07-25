@@ -1,53 +1,124 @@
-
-//Obtenemos las constantes
-const btn_once = document.querySelector("#btn_once");
-const btn_two = document.querySelector("#btn_two");
-const btn_three = document.querySelector("#btn_three");
-const btn_four = document.querySelector("#btn_four");
-const btn_five = document.querySelector("#btn_five");
-const btn_six = document.querySelector("#btn_six");
-const btn_seven = document.querySelector("#btn_seven");
-const btn_eigth = document.querySelector("#btn_eigth");
-const btn_nine = document.querySelector("#btn_nine");
-const btn_cero = document.querySelector("#btn_cero");
-const btn_suma = document.querySelector("#btn_suma");
-const btn_resta = document.querySelector("#btn_resta");
-const btn_multiplicar = document.querySelector("#btn_multiplicar");
-const btn_dividir = document.querySelector("#btn_dividir");
-const btn_point = document.querySelector("#btn_point");
-const btn_igual = document.querySelector("#btn_igual");
-const btn_delete = document.querySelector("#btn_delete");
-const btn_clear = document.querySelector("#btn_clear");
-let display = document.querySelector("#display");
+/**
+ * Declaracion de las constantes
+ */
+const btn_number = document.querySelectorAll(".btn-number");
+const btn_operator = document.querySelectorAll(".btn-operator");
+const btn_point = document.querySelector("#btn-point");
+const btn_igual = document.querySelector("#btn-igual");
+const btn_delete = document.querySelector("#btn-delete");
+const btn_clear = document.querySelector("#btn-clear");
 let valor = document.querySelector("#valor");
+let display = document.querySelector("#display");
+let historial = document.querySelector("#historial");
+let dispayReset = false;
 
-// console.log(btn_once.textContent);
-// console.log(btn_two.textContent);
-// console.log(btn_three.textContent);
-// console.log(btn_four.textContent);
-// console.log(btn_five.textContent);
-// console.log(btn_six.textContent);
-// console.log(btn_seven.textContent);
-// console.log(btn_eigth.textContent);
-// console.log(btn_nine.textContent);
-// console.log(btn_cero.textContent);
-// console.log(btn_suma.textContent);
-// console.log(btn_resta.textContent);
-// console.log(btn_dividir.textContent);
-// console.log(btn_multiplicar.textContent);
-// console.log(btn_point.textContent);
-// console.log(btn_igual.textContent);
-// console.log(btn_delete.textContent);
-// console.log(btn_clear.textContent);
-
-btn_once.addEventListener("click",concatenar(btn_once,valor));
-btn_two.addEventListener("click",concatenar(btn_two,valor));
+/**
+ * Eventos de los botones
+*/
+btn_number.forEach(button => {
+  button.addEventListener("click",() => addDisplay(button.textContent));
+});
 
 
-function concatenar(dato,dato_display){
-  if(dato_display.textContent == "0"){
-    dato_display.textContent = dato.textContent;
+btn_operator.forEach(button => {
+  button.addEventListener("click",() => addDisplay(button.textContent,true));
+})
+
+btn_point.addEventListener("click",() => addDisplay(btn_point.textContent));
+btn_igual.addEventListener("click",calculateResult());
+
+/**
+ * Funcion que nos permite
+ * limpiar un dato
+*/
+btn_delete.addEventListener("click",() => {
+  if(valor.textContent.length > 1){
+    valor.textContent = valor.textContent.toString().slice(0,-1);
   }else{
-    dato_display.textContent += dato.textContent;
+    valor.textContent = 0;
+
   }
+});
+
+/**
+ * Funcion que nos permite
+ * limpiar todos los datos
+*/
+btn_clear.addEventListener("click",() => {
+  valor.textContent = 0;
+  historial.textContent = "";
+  dispayReset = false;
+});
+
+/**
+ * Funcion que nos permite añadir los datos al display
+ * @param {Object} dato
+ * @returns {String} @example "1"
+ */
+function addDisplay(dato,operador = false) {
+  if (valor.textContent == 0 || dispayReset) {
+    if(dato!="+" && dato!="-" && dato!="*" && dato!="/"){
+    valor.textContent = dato;
+    dispayReset = false;
+    }
+  }else{
+    if(operador){
+      getOperator(dato);
+      valor.textContent += dato;
+    }else{
+      valor.textContent += dato;
+    }
+  }
+}
+
+
+/**
+ * Funcion que nos permite guardar el operador
+ * @param {String} operator @example "+"
+ * @returns {String} @example "1 + "
+ */
+function getOperator(operator) {
+    if (historial.textContent && !resetDisplay) {
+        calculateResult();
+    }
+    historial.textContent = valor.textContent + ' ' + operator;
+    resetDisplay = true;
+}
+
+
+function calculateResult() {
+  if (historial.textContent && valor.textContent) {
+      const expression = historial.textContent + ' ' + valor.textContent;
+      try {
+          const result = operar(expression);
+          historial.textContent = expression + ' =';
+          valor.textContent = result.toString();
+          resetDisplay = true;
+      } catch (error) {
+          valor.textContent = 'Error';
+          resetDisplay = true;
+      }
+  }
+}
+
+/**
+ * Funcion para guardar el registro del operacion solicitada
+ * @param {String} proceso @example "1 + 1"
+ * @returns {String} @example "1 + 1"
+ */
+// function calculo_historial(proceso){
+//   if(historial.textContent != "" && valor.textContent != 0){
+//     return historial.textContent += proceso;
+//   }else{
+//     return historial.textContent = proceso;
+//   }
+// }
+
+/**
+ * Funcion que nos permite operar los datos
+ * @example "1 + 1 = 2"
+ * @returns {String} @example "2"
+ */
+function operar(evaluacion) {
+  return eval(evaluacion);
 }

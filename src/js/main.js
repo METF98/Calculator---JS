@@ -7,10 +7,12 @@ const btn_point = document.querySelector("#btn-point");
 const btn_igual = document.querySelector("#btn-igual");
 const btn_delete = document.querySelector("#btn-delete");
 const btn_clear = document.querySelector("#btn-clear");
+const body = document.querySelector("#body");
 let valor = document.querySelector("#valor");
 let display = document.querySelector("#display");
 let historial = document.querySelector("#historial");
-let dispayReset = false;
+let displayReset = false;
+let isResult = false;
 
 /**
  * Eventos de los botones
@@ -25,7 +27,7 @@ btn_operator.forEach(button => {
 })
 
 btn_point.addEventListener("click",() => addDisplay(btn_point.textContent));
-btn_igual.addEventListener("click",calculateResult());
+btn_igual.addEventListener("click", () => calculateResult());
 
 /**
  * Funcion que nos permite
@@ -36,7 +38,6 @@ btn_delete.addEventListener("click",() => {
     valor.textContent = valor.textContent.toString().slice(0,-1);
   }else{
     valor.textContent = 0;
-
   }
 });
 
@@ -47,7 +48,7 @@ btn_delete.addEventListener("click",() => {
 btn_clear.addEventListener("click",() => {
   valor.textContent = 0;
   historial.textContent = "";
-  dispayReset = false;
+  displayReset = false;
 });
 
 /**
@@ -56,18 +57,46 @@ btn_clear.addEventListener("click",() => {
  * @returns {String} @example "1"
  */
 function addDisplay(dato,operador = false) {
-  if (valor.textContent == 0 || dispayReset) {
-    if(dato!="+" && dato!="-" && dato!="*" && dato!="/"){
-    valor.textContent = dato;
-    dispayReset = false;
-    }
+  if (valor.textContent == 0 || displayReset) {
+      if(dato!="+" && dato!="-" && dato!="*" && dato!="/"){
+      valor.textContent = dato;
+      displayReset = false;
+      }
   }else{
     if(operador){
       getOperator(dato);
-      valor.textContent += dato;
+      displayReset = true;
+      valor.textContent = 0;
     }else{
-      valor.textContent += dato;
+      if(validaDisplay(valor.textContent)){
+        if(dato!="+" && dato!="-" && dato!="*" && dato!="/"){
+          valor.textContent += dato;
+          console.log(dato);
+      console.log(isResult);
+      console.log(displayReset);
+      console.log(operador)
+        }
+      }else{
+        display.classList.add("bg-red-500");
+        setTimeout(() => {
+          display.classList.remove("bg-red-500");
+        },500);
+      }
     }
+  }
+}
+
+function validaDisplay(){
+  if (valor.textContent.length <= 25) {
+    if (valor.textContent.length <= 15) {
+      return true;
+    }else{
+      valor.classList.remove("text-[2.5rem]");
+      valor.classList.add("text-[1.5rem]");
+      return true;
+    }
+  }else{
+    return false;
   }
 }
 
@@ -78,26 +107,40 @@ function addDisplay(dato,operador = false) {
  * @returns {String} @example "1 + "
  */
 function getOperator(operator) {
-    if (historial.textContent && !resetDisplay) {
-        calculateResult();
+    if (isResult) {
+      historial.textContent = ' ' + valor.textContent + ' ' + operator + ' ';
+      valor.textContent = 0;
+      isResult = false;
+    }else{
+      historial.textContent += ' ' + valor.textContent + ' ' + operator + ' ';
+      valor.textContent = 0;
     }
-    historial.textContent = valor.textContent + ' ' + operator;
-    resetDisplay = true;
 }
 
 
 function calculateResult() {
   if (historial.textContent && valor.textContent) {
-      const expression = historial.textContent + ' ' + valor.textContent;
-      try {
-          const result = operar(expression);
-          historial.textContent = expression + ' =';
-          valor.textContent = result.toString();
-          resetDisplay = true;
-      } catch (error) {
-          valor.textContent = 'Error';
-          resetDisplay = true;
+    const expression = historial.textContent + ' ' + valor.textContent;
+    try {
+      const result = operar(expression);
+      historial.textContent = expression ;
+      valor.textContent = result.toString();
+      displayReset = true;
+      isResult = true;
+    }catch (error) {
+      if (valor.textContent != 0){
+        let error = document.createElement("p");
+        error.textContent = "Debes Seleccionar un Operador";
+        error.classList.add("text-red-500","text-center","font-bold","text-2xl","mb-6");
+        body.insertBefore(error, body.children[1]);
+        setTimeout(() => {
+          error.remove();
+        },"2000");
+      }else{
+        historial.textContent = "";
+        valor.textContent = 0;
       }
+    }
   }
 }
 

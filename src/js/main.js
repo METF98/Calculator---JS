@@ -146,7 +146,7 @@ function historialDisplay(operator) {
  * @returns {String} @example "1"
  */
 function calculateResult() {
-  if (historial.textContent && valor.textContent &&  valor.textContent > 0) {
+  if (historial.textContent && valor.textContent &&  valor.textContent >= 0) {
     const expression = historial.textContent + ' ' + valor.textContent;
     try {
       const result = operar(expression);

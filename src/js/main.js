@@ -50,6 +50,7 @@ btn_clear.addEventListener("click",() => {
   historial.textContent = "";
   updateDisplay = false;
   isResult = false;
+  validaDisplay();
 });
 
 /**
@@ -162,7 +163,8 @@ function calculateResult() {
           valor.textContent = 0;
         },1000);
       }else{
-        valor.textContent = result.toString();
+        valor.textContent = result;
+        validaDisplay();
         updateDisplay = false;
         isResult = true;
       }
@@ -186,6 +188,7 @@ function calculateResult() {
     valor.textContent = 0;
   }
 }
+
 
 /**
  * Funcion que nos permite operar los datos

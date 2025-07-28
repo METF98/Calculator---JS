@@ -11,7 +11,7 @@ const body = document.querySelector("#body");
 let valor = document.querySelector("#valor");
 let display = document.querySelector("#display");
 let historial = document.querySelector("#historial");
-let displayReset = false;
+let updateDisplay = false;
 let isResult = false;
 
 /**
@@ -48,34 +48,51 @@ btn_delete.addEventListener("click",() => {
 btn_clear.addEventListener("click",() => {
   valor.textContent = 0;
   historial.textContent = "";
-  displayReset = false;
+  updateDisplay = false;
+  isResult = false;
 });
 
 /**
  * Funcion que nos permite añadir los datos al display
- * @param {Object} dato
- * @returns {String} @example "1"
+ * @param {Object} dato @example "1"
+ * @param {Boolean} operador @example false or true
+ * @returns {String} @example "1" or "1 + " or "1 + 1"
  */
 function addDisplay(dato,operador = false) {
-  if (valor.textContent == 0 || displayReset) {
-      if(dato!="+" && dato!="-" && dato!="*" && dato!="/"){
-      valor.textContent = dato;
-      displayReset = false;
+  if(!operador){
+    if (valor.textContent == 0 || !updateDisplay) {
+      if(validaDisplay(valor.textContent)){
+        if(isResult) {
+          historial.textContent = "";
+          valor.textContent = dato;
+          updateDisplay = true;
+          isResult = false;
+        }else{
+          valor.textContent = dato;
+          updateDisplay = true;
+        }
+      }else{
+        display.classList.add("bg-red-500");
+        setTimeout(() => {
+          display.classList.remove("bg-red-500");
+        },500);
       }
-  }else{
-    if(operador){
-      getOperator(dato);
-      displayReset = true;
-      valor.textContent = 0;
     }else{
       if(validaDisplay(valor.textContent)){
-        if(dato!="+" && dato!="-" && dato!="*" && dato!="/"){
-          valor.textContent += dato;
-          console.log(dato);
-      console.log(isResult);
-      console.log(displayReset);
-      console.log(operador)
-        }
+        valor.textContent += dato;
+      }else{
+        display.classList.add("bg-red-500");
+        setTimeout(() => {
+          display.classList.remove("bg-red-500");
+        },500);
+      }
+    }
+  }else if(operador){
+    if(valor.textContent != 0){
+      if(validaDisplay(valor.textContent)){
+        historialDisplay(dato);
+        updateDisplay = true;
+        valor.textContent = 0;
       }else{
         display.classList.add("bg-red-500");
         setTimeout(() => {
@@ -86,9 +103,15 @@ function addDisplay(dato,operador = false) {
   }
 }
 
+/**
+ * Validamos el tamaño del display para que no se sobrepase
+ * @returns {Boolean} @example true or false
+ */
 function validaDisplay(){
   if (valor.textContent.length <= 25) {
     if (valor.textContent.length <= 15) {
+      valor.classList.remove("text-[1.5rem]");
+      valor.classList.add("text-[2.5rem]");
       return true;
     }else{
       valor.classList.remove("text-[2.5rem]");
@@ -102,37 +125,54 @@ function validaDisplay(){
 
 
 /**
- * Funcion que nos permite guardar el operador
- * @param {String} operator @example "+"
- * @returns {String} @example "1 + "
+ * Funcion que nos permite guardar la operacion en el historial
+ * @param {String} operator @example "1 +" or "1 + 1"
  */
-function getOperator(operator) {
+function historialDisplay(operator) {
     if (isResult) {
+      validaDisplay();
       historial.textContent = ' ' + valor.textContent + ' ' + operator + ' ';
       valor.textContent = 0;
       isResult = false;
     }else{
+      validaDisplay();
       historial.textContent += ' ' + valor.textContent + ' ' + operator + ' ';
       valor.textContent = 0;
     }
 }
 
-
+/**
+ * Funcion que nos permite calcular el resultado de la operacion
+ * @returns {String} @example "1"
+ */
 function calculateResult() {
-  if (historial.textContent && valor.textContent) {
+  if (historial.textContent && valor.textContent &&  valor.textContent > 0) {
     const expression = historial.textContent + ' ' + valor.textContent;
     try {
       const result = operar(expression);
       historial.textContent = expression ;
-      valor.textContent = result.toString();
-      displayReset = true;
-      isResult = true;
-    }catch (error) {
+      if(result == "Math Error"){
+        valor.textContent = result;
+        updateDisplay = false;
+        isResult = false;
+        display.classList.add("bg-red-500");
+        setTimeout(() => {
+          display.classList.remove("bg-red-500");
+          historial.textContent = "";
+          valor.textContent = 0;
+        },1000);
+      }else{
+        valor.textContent = result.toString();
+        updateDisplay = false;
+        isResult = true;
+      }
+    }catch (e) {
       if (valor.textContent != 0){
         let error = document.createElement("p");
         error.textContent = "Debes Seleccionar un Operador";
         error.classList.add("text-red-500","text-center","font-bold","text-2xl","mb-6");
         body.insertBefore(error, body.children[1]);
+        console.log(e);
         setTimeout(() => {
           error.remove();
         },"2000");
@@ -141,27 +181,23 @@ function calculateResult() {
         valor.textContent = 0;
       }
     }
+  }else{
+    historial.textContent = "";
+    valor.textContent = 0;
   }
 }
 
 /**
- * Funcion para guardar el registro del operacion solicitada
- * @param {String} proceso @example "1 + 1"
- * @returns {String} @example "1 + 1"
- */
-// function calculo_historial(proceso){
-//   if(historial.textContent != "" && valor.textContent != 0){
-//     return historial.textContent += proceso;
-//   }else{
-//     return historial.textContent = proceso;
-//   }
-// }
-
-/**
  * Funcion que nos permite operar los datos
  * @example "1 + 1 = 2"
- * @returns {String} @example "2"
+ * @param {String} evaluacion @example "1 + 1"
+ * @returns {String} @example "2" or "Math Error"
  */
 function operar(evaluacion) {
-  return eval(evaluacion);
+  if(eval(evaluacion) == "Infinity"){
+    return "Math Error";
+  }else{
+    return eval(evaluacion);
+  }
+
 }

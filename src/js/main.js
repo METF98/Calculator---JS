@@ -197,7 +197,7 @@ function calculateResult() {
  * @returns {String} @example "2" or "Math Error"
  */
 function operar(evaluacion) {
-  if(eval(evaluacion) == "Infinity"){
+  if(eval(evaluacion) == "Infinity" || eval(evaluacion) == "NaN" || eval(evaluacion) == "-Infinity"){
     return "Math Error";
   }else{
     return eval(evaluacion);
